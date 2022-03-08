@@ -1,6 +1,7 @@
 name: lint
 
 on:
+  workflow_dispatch:
   push:
     branches: main
   pull_request:
@@ -30,7 +31,7 @@ jobs:
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run selene
-        run: selene --display-style=quiet .
+        run: selene --display-style=quiet lua/
 
   style-lint:
     runs-on: ubuntu-latest
