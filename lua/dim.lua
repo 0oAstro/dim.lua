@@ -60,6 +60,9 @@ function util.highlight_word(ns, line, from, to)
   end
   local hl = vim.api.nvim_get_hl_by_name(final, true)
   local color = string.format("#%x", hl["foreground"] or 0)
+  if #color ~= 7 then
+    color = "#ffffff"
+  end
   vim.api.nvim_set_hl(
     0,
     string.format("%sDimmed", final),
