@@ -126,7 +126,7 @@ dim.get_unused = function()
   vim.api.nvim_buf_clear_namespace(0, dim.ns, 0, -1)
 
   for _, lsp_datum in ipairs(lsp_data) do
-    if string.match(string.lower(lsp_datum.user_data.lsp.code), "unused") then
+    if string.match(string.lower(lsp_datum.user_data.lsp.code), "never read") or string.match(string.lower(lsp_datum.user_data.lsp.code), "unused") then
       util.highlight_word(dim.ns, lsp_datum.lnum, lsp_datum.col, lsp_datum.end_col)
     end
   end
