@@ -139,8 +139,14 @@ dim.setup = function()
   dim.ns = vim.api.nvim_create_namespace("Dim")
 
   dim.get_unused()
-  vim.api.nvim_create_autocmd("TextChanged", { callback = dim.get_unused })
-  vim.api.nvim_create_autocmd("InsertLeave", { callback = dim.get_unused })
+
+  vim.cmd([[
+    augroup dim
+    autocmd!
+    autocmd TextChanged * lua require("dim").setup()
+    autocmd InsertLeave * lua require("dim").setup()
+    augroup END
+  ]])
 
   vim.api.nvim__set_hl_ns(dim.ns)
 end
