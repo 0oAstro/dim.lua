@@ -7,20 +7,6 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 ------------------------
 --## UTIL FUNCTIONS ##--
 ------------------------
----Check if a table has given value
----@param tbl table
----@param val any
----@return boolean
-util.has_value = function(tbl, val)
-  for _, value in ipairs(tbl) do
-    if value == val then
-      return true
-    end
-  end
-
-  return false
-end
-
 ---@param hex_str string hexadecimal value of a color
 function util.hex_to_rgb(hex_str)
   local hex = "[abcdef0-9][abcdef0-9]"
@@ -69,6 +55,16 @@ function util.highlight_word(ns, line, from, to)
     { fg = util.darken(color, 0.75), undercurl = false, underline = false }
   )
   vim.api.nvim_buf_add_highlight(0, ns, string.format("%sDimmed", final), line, from, to)
+  if dim.opts.disable_lsp_decorations then
+    for _, lsp_ns in pairs(vim.diagnostic.get_namespaces()) do
+      local namespaces_to_clear = { "underline_ns", "virt_text_ns" }
+      for _, ns_to_clear in ipairs(namespaces_to_clear) do
+        if lsp_ns.user_data[ns_to_clear] then
+          vim.api.nvim_buf_clear_namespace(0, lsp_ns.user_data[ns_to_clear], line, line + 1)
+        end
+      end
+    end
+  end
 end
 
 function util.get_treesitter_hl(row, col)
@@ -117,11 +113,8 @@ function util.get_treesitter_hl(row, col)
 end
 
 -- UTIL FUNCTIONS END
-
-----------------------------
---## STORE UNUSED WORDS ##--
-----------------------------
-dim.get_unused = function()
+--- Highlight unused vars and functions
+dim.hig_unused = function()
   local lsp_data = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
   vim.api.nvim_buf_clear_namespace(0, dim.ns, 0, -1)
 
@@ -135,16 +128,21 @@ dim.get_unused = function()
   end
 end
 
-dim.setup = function()
+dim.opts = { disable_lsp_decorations = false }
+
+--- Setup Function
+--- @param tbl table config options
+dim.setup = function(tbl)
+  dim.opts = vim.tbl_deep_extend("force", dim.opts, tbl or {})
   dim.ns = vim.api.nvim_create_namespace("Dim")
 
-  dim.get_unused()
+  dim.hig_unused()
 
   vim.cmd([[
     augroup dim
     autocmd!
-    autocmd TextChanged * lua require("dim").setup()
-    autocmd InsertLeave * lua require("dim").setup()
+    autocmd TextChanged * lua require("dim").hig_unused()
+    autocmd InsertLeave * lua require("dim").hig_unused()
     augroup END
   ]])
 

@@ -9,7 +9,7 @@
 
 ## ⚡️ Requirements
 
-- Neovim >= 0.7.0 dev
+- Neovim >= 0.7.0 dev (should also work with 0.6 but haven't tested yet )
 
 ## 📦 Installation
 
@@ -23,7 +23,7 @@ use {
   "narutoxy/dim.lua",
   requires = { "nvim-treesitter/nvim-treesitter", "neovim/nvim-lspconfig" },
   config = function()
-    require('dim').setup()
+    require('dim').setup({})
   end
 }
 ```
@@ -36,5 +36,22 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'narutoxy/dim.lua'
 
-lua require('dim').setup()
+lua require('dim').setup({})
 ```
+
+## ⚙️ Configuratioon
+
+Dim comes with the following defaults:
+
+```lua
+{
+  disable_lsp_decorations = false -- disable virt text and underline by lsp on unused vars and functions
+}
+```
+
+## Tested LSPs
+| LSPs          | Status |
+|---------------|--------|
+| tsserver      | ✔️      | 
+| sumneko_lua   | ✔️      | 
+| rust_analyzer | ✔️      | 
