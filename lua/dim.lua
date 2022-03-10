@@ -127,7 +127,7 @@ dim.hig_unused = function()
   end
 end
 
-dim.opts = { disable_lsp_decorations = false, change_in_insert = false }
+dim.opts = { disable_lsp_decorations = false }
 
 --- Setup Function
 --- @param tbl table config options
@@ -143,15 +143,6 @@ dim.setup = function(tbl)
     autocmd DiagnosticChanged * lua require("dim").hig_unused()
     augroup END
   ]])
-
-  if dim.opts.change_in_insert then
-    vim.cmd([[
-      augroup dim
-      autocmd!
-      autocmd DiagnosticChanged,InsertLeave,TextYankPost,TextChangedI,TextChangedP,TextChanged * lua require("dim").hig_unused()
-      augroup END
-    ]])
-  end
 
   vim.api.nvim__set_hl_ns(dim.ns)
 end
