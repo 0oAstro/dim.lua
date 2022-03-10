@@ -9,7 +9,7 @@
 
 ## ⚡️ Requirements
 
-- Neovim >= 0.7.0 dev (should also work with 0.6 but haven't tested yet )
+- Neovim >= 0.6.0
 
 ## 📦 Installation
 

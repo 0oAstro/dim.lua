@@ -50,7 +50,7 @@ function util.highlight_word(ns, line, from, to)
     color = "#ffffff"
   end
   vim.api.nvim_set_hl(
-    0,
+    dim.ns,
     string.format("%sDimmed", final),
     { fg = util.darken(color, 0.75), undercurl = false, underline = false }
   )
