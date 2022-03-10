@@ -117,7 +117,6 @@ end
 dim.hig_unused = function()
   local lsp_data = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
   vim.api.nvim_buf_clear_namespace(0, dim.ns, 0, -1)
-
   for _, lsp_datum in ipairs(lsp_data) do
     if
       string.match(string.lower(lsp_datum.user_data.lsp.code), "never read")
@@ -128,7 +127,7 @@ dim.hig_unused = function()
   end
 end
 
-dim.opts = { disable_lsp_decorations = false }
+dim.opts = { disable_lsp_decorations = false, change_in_insert = false }
 
 --- Setup Function
 --- @param tbl table config options
@@ -141,10 +140,18 @@ dim.setup = function(tbl)
   vim.cmd([[
     augroup dim
     autocmd!
-    autocmd TextChanged * lua require("dim").hig_unused()
-    autocmd InsertLeave * lua require("dim").hig_unused()
+    autocmd DiagnosticChanged * lua require("dim").hig_unused()
     augroup END
   ]])
+
+  if dim.opts.change_in_insert then
+    vim.cmd([[
+      augroup dim
+      autocmd!
+      autocmd DiagnosticChanged,InsertLeave,TextYankPost,TextChangedI,TextChangedP,TextChanged * lua require("dim").hig_unused()
+      augroup END
+    ]])
+  end
 
   vim.api.nvim__set_hl_ns(dim.ns)
 end
