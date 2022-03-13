@@ -39,6 +39,11 @@ function util.darken(hex, amount, bg)
 end
 
 function util.highlight_word(ns, line, from, to)
+  -- null ls
+  if from == to and to == 0 then
+    from = 0
+    to = 120
+  end
   local ts_hi = util.get_treesitter_hl(line, from)
   local final = #ts_hi >= 1 and ts_hi[#ts_hi]
   if type(final) ~= "string" then
@@ -115,19 +120,19 @@ end
 -- UTIL FUNCTIONS END
 --- Highlight unused vars and functions
 dim.hig_unused = function()
-  local lsp_data = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-  vim.api.nvim_buf_clear_namespace(0, dim.ns, 0, -1)
-  for _, lsp_datum in ipairs(lsp_data) do
-    if
-      string.match(string.lower(lsp_datum.user_data.lsp.code), "never read")
-      or string.match(string.lower(lsp_datum.user_data.lsp.code), "unused")
-    then
-      util.highlight_word(dim.ns, lsp_datum.lnum, lsp_datum.col, lsp_datum.end_col)
+  local ok, lsp_data = pcall(vim.diagnostic.get, 0)
+  if ok then
+    vim.api.nvim_buf_clear_namespace(0, dim.ns, 0, -1)
+    for _, lsp_datum in ipairs(lsp_data) do
+      local message = string.lower((lsp_datum.user_data and lsp_datum.user_data.lsp.code) or lsp_datum.message or "")
+      if string.match(message, "never read") or string.match(message, "unused") then
+        util.highlight_word(dim.ns, lsp_datum.lnum, lsp_datum.col, lsp_datum.end_col)
+      end
     end
   end
 end
 
-dim.opts = { disable_lsp_decorations = false, change_in_insert = false }
+dim.opts = { disable_lsp_decorations = false }
 
 --- Setup Function
 --- @param tbl table config options
@@ -143,15 +148,6 @@ dim.setup = function(tbl)
     autocmd DiagnosticChanged * lua require("dim").hig_unused()
     augroup END
   ]])
-
-  if dim.opts.change_in_insert then
-    vim.cmd([[
-      augroup dim
-      autocmd!
-      autocmd DiagnosticChanged,InsertLeave,TextYankPost,TextChangedI,TextChangedP,TextChanged * lua require("dim").hig_unused()
-      augroup END
-    ]])
-  end
 
   vim.api.nvim__set_hl_ns(dim.ns)
 end
