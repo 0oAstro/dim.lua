@@ -62,10 +62,15 @@ function util.highlight_word(ns, line, from, to)
   vim.api.nvim_buf_add_highlight(0, ns, string.format("%sDimmed", final), line, from, to)
   if dim.opts.disable_lsp_decorations then
     for _, lsp_ns in pairs(vim.diagnostic.get_namespaces()) do
-      local namespaces_to_clear = { "underline_ns", "virt_text_ns" }
+      local namespaces_to_clear = { "underline_ns", "virt_text_ns", "sign_group" }
       for _, ns_to_clear in ipairs(namespaces_to_clear) do
         if lsp_ns.user_data[ns_to_clear] then
-          vim.api.nvim_buf_clear_namespace(0, lsp_ns.user_data[ns_to_clear], line, line + 1)
+          local id = lsp_ns.user_data[ns_to_clear]
+          if type(id) == "string" then
+            vim.fn.sign_unplace(id, { buffer = vim.api.nvim_get_current_buf() })
+          else
+            vim.api.nvim_buf_clear_namespace(0, id, line, line + 1)
+          end
         end
       end
     end
