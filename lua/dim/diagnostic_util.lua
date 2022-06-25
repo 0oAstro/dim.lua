@@ -1,8 +1,9 @@
 local M = {}
 
+---@param lsp_datum Diagnostic
 local function get_message_from_lsp_diagnostic(lsp_datum)
-  if lsp_datum.user_data and lsp_datum.user_data.lsp.code and type(lsp_datum.user_data.lsp.code) == "string" then
-    return lsp_datum.user_data.lsp.code
+  if lsp_datum.code and type(lsp_datum.code) == "string" then
+    return lsp_datum.code
   end
 
   return lsp_datum.message or ""
