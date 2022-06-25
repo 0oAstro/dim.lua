@@ -1,7 +1,11 @@
 local M = {}
 
 local function get_message_from_lsp_diagnostic(lsp_datum)
-  return (lsp_datum.user_data and lsp_datum.user_data.lsp.code) or lsp_datum.message or ""
+  if lsp_datum.user_data and lsp_datum.user_data.lsp.code and type(lsp_datum.user_data.lsp.code) == "string" then
+    return lsp_datum.user_data.lsp.code
+  end
+
+  return lsp_datum.message or ""
 end
 
 function M.is_unused_symbol_diagnostic(lsp_datum)
