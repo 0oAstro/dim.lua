@@ -44,6 +44,13 @@ describe("is_unused_symbol_diagnostic", function()
       },
       expected_result = true,
     },
+    {
+      description = "detects unused symbols from jdtls diagnostics",
+      lsp_datum = {
+        code = "536870973",
+      },
+      expected_result = true,
+    },
   }
 
   local diagnostic_util = require("dim.diagnostic_util")
