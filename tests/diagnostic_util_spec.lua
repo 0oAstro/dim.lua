@@ -51,6 +51,13 @@ describe("is_unused_symbol_diagnostic", function()
       },
       expected_result = true,
     },
+    {
+      description = "detects unused private methods from jdtls diagnostics",
+      lsp_datum = {
+        code = "603979894",
+      },
+      expected_result = true,
+    },
   }
 
   local diagnostic_util = require("dim.diagnostic_util")
