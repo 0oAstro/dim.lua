@@ -1,4 +1,5 @@
 # Dim
+
 **dim** is a lua plugin for neovim to dim the unused variables and functions using lsp and treesitter.
 
 <video src = "https://user-images.githubusercontent.com/79555780/157270883-da3120c8-b8b2-4036-8063-3b5ce10d4d88.mp4"></video>
@@ -50,8 +51,10 @@ Dim comes with the following defaults:
 ```
 
 ## Tested LSPs
+
 | LSPs          | Status |
-|---------------|--------|
-| tsserver      | ✔️      | 
-| sumneko_lua   | ✔️      | 
-| rust_analyzer | ✔️      | 
+| ------------- | ------ |
+| tsserver      | ✔️     |
+| sumneko_lua   | ✔️     |
+| rust_analyzer | ✔️     |
+| jdtls         | ✔️     |

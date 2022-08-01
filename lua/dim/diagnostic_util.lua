@@ -1,3 +1,5 @@
+local matchers = require("dim.matchers")
+
 local M = {}
 
 ---@param lsp_datum Diagnostic
@@ -11,7 +13,12 @@ end
 
 function M.is_unused_symbol_diagnostic(lsp_datum)
   local message = string.lower(get_message_from_lsp_diagnostic(lsp_datum))
-  return string.match(message, "never read") or string.match(message, "unused")
+  for _, matcher in ipairs(matchers) do
+    if string.match(message, matcher) then
+      return true
+    end
+  end
+  return false
 end
 
 return M
