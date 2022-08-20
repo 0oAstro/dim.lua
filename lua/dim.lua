@@ -38,7 +38,7 @@ function util.darken(hex, amount, bg)
   return util.blend(hex, bg or "#000000", math.abs(amount))
 end
 
-function util.highlight_word(ns, line, from, to)
+function util.highlight_word(line, from, to)
   -- null ls
   if from == to and to == 0 then
     from = 0
@@ -55,11 +55,11 @@ function util.highlight_word(ns, line, from, to)
     color = "#ffffff"
   end
   vim.api.nvim_set_hl(
-    dim.ns,
+    0,
     string.format("%sDimmed", final),
     { fg = util.darken(color, 0.75), undercurl = false, underline = false }
   )
-  vim.api.nvim_buf_add_highlight(0, ns, string.format("%sDimmed", final), line, from, to)
+  vim.api.nvim_buf_add_highlight(0, dim.ns, string.format("%sDimmed", final), line, from, to)
   if dim.opts.disable_lsp_decorations then
     for _, lsp_ns in pairs(vim.diagnostic.get_namespaces()) do
       local namespaces_to_clear = { "underline_ns", "virt_text_ns", "sign_group" }
@@ -132,7 +132,7 @@ dim.hig_unused = function()
     vim.api.nvim_buf_clear_namespace(0, dim.ns, 0, -1)
     for _, lsp_datum in ipairs(lsp_data) do
       if diagnostic_util.is_unused_symbol_diagnostic(lsp_datum) then
-        util.highlight_word(dim.ns, lsp_datum.lnum, lsp_datum.col, lsp_datum.end_col)
+        util.highlight_word(lsp_datum.lnum, lsp_datum.col, lsp_datum.end_col)
       end
     end
   end
@@ -154,8 +154,6 @@ dim.setup = function(tbl)
     autocmd DiagnosticChanged * lua require("dim").hig_unused()
     augroup END
   ]])
-
-  vim.api.nvim__set_hl_ns(dim.ns)
 end
 
 return dim
