@@ -54,12 +54,9 @@ function util.highlight_word(line, from, to)
   if #color ~= 7 then
     color = "#ffffff"
   end
-  vim.api.nvim_set_hl(
-    0,
-    string.format("%sDimmed", final),
-    { fg = util.darken(color, 0.75), undercurl = false, underline = false }
-  )
-  vim.api.nvim_buf_add_highlight(0, dim.ns, string.format("%sDimmed", final), line, from, to)
+  local hl_group = string.format("%sDimmed", final)
+  vim.api.nvim_set_hl(0, hl_group, { fg = util.darken(color, 0.75), undercurl = false, underline = false })
+  vim.api.nvim_buf_add_highlight(0, dim.ns, hl_group, line, from, to)
   if dim.opts.disable_lsp_decorations then
     for _, lsp_ns in pairs(vim.diagnostic.get_namespaces()) do
       local namespaces_to_clear = { "underline_ns", "virt_text_ns", "sign_group" }
