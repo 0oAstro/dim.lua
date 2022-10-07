@@ -78,8 +78,8 @@ function util.get_treesitter_hl(row, col)
   local buf = vim.api.nvim_get_current_buf()
 
   -- NOTE: use new functionality from https://github.com/neovim/neovim/issues/14090#issuecomment-1228444035
-  if vim.treesitter.get_captures_at_position ~= nil then
-    local matches = vim.treesitter.get_captures_at_position(buf, row, col)
+  if vim.treesitter.get_captures_at_pos ~= nil then
+    local matches = vim.treesitter.get_captures_at_pos(buf, row, col)
     return vim.tbl_map(function(match)
       return "@" .. match.capture
     end, matches)
