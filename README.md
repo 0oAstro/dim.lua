@@ -16,12 +16,22 @@
 
 Install the plugin with your preferred package manager:
 
+### [lazy](https://github.com/folke/lazy.nvim) 
+
+```lua
+-- Lua
+{
+  "0oAstro/dim.lua",
+  dependencies = { "nvim-treesitter/nvim-treesitter", "neovim/nvim-lspconfig" },
+},
+```
+
 ### [packer](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 -- Lua
 use {
-  "narutoxy/dim.lua",
+  "0oAstro/dim.lua",
   requires = { "nvim-treesitter/nvim-treesitter", "neovim/nvim-lspconfig" },
   config = function()
     require('dim').setup({})
@@ -35,7 +45,7 @@ use {
 " Vim Script
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'narutoxy/dim.lua'
+Plug '0oAstro/dim.lua'
 
 lua require('dim').setup({})
 ```
