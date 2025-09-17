@@ -1,8 +1,8 @@
 local dim = {}
 local util = {}
 
-local highlighter = require("vim.treesitter.highlighter")
-local ts_utils = require("nvim-treesitter.ts_utils")
+local ts = vim.treesitter
+local _, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 
 ------------------------
 --## UTIL FUNCTIONS ##--
@@ -85,7 +85,7 @@ function util.get_treesitter_hl(row, col)
     end, matches)
   end
 
-  local self = highlighter.active[buf]
+  local self = ts.highlighter.active[buf]
   if not self then
     return {}
   end
@@ -115,7 +115,7 @@ function util.get_treesitter_hl(row, col)
     for capture, node, _ in iter do
       local hl = query.hl_cache[capture]
 
-      if hl and ts_utils.is_in_node_range(node, row, col) then
+      if hl and ts_utils and ts_utils.node_in_range(node, row, col) or ts.is_in_node_range(node, row, col) then
         local c = query._query.captures[capture] -- name of the capture in the query
         if c ~= nil then
           local general_hl = query:_get_hl_from_capture(capture)
